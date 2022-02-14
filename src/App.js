@@ -18,6 +18,7 @@ import {
 } from 'firebase/auth';
 import { getFirestore, getDoc, doc } from 'firebase/firestore';
 
+// I think that the config and initializator must be outside of the App component.
 const firebaseConfig = {
     apiKey: 'AIzaSyA3aGOBTftC2pngqZdKyyR8EAjJPv4KjGY',
     authDomain: 'wheresmoviecharacter.firebaseapp.com',
@@ -34,6 +35,7 @@ const App = () => {
     const [name, setName] = useState('');
     const [isSignedIn, setIsSignedIn] = useState(false);
 
+    // When the component is mounted, find out if the user is authenticated
     useEffect(() => {
         onAuthStateChanged(getAuth(), (user) => {
             if (user) {
@@ -48,6 +50,7 @@ const App = () => {
                 setPhotoUrl('./assets/profile_placeholder.png');
                 setName('');
                 setIsSignedIn(false);
+
                 console.log('Not logged in');
             }
         });
@@ -62,7 +65,13 @@ const App = () => {
         signOut(getAuth());
     };
 
+    // Get the coordinates from the firestore and compare them
+    // with the user's click's coordinates
     const gameFunc = async (e) => {
+        // Get the document from the firestore
+        // Attention: 'char1' should not be manually coded,
+        //             but come from the option menu
+        //             that appears on a user's click
         const docRef = doc(db, 'characters', 'char1');
         const docSnap = await getDoc(docRef);
 
@@ -71,18 +80,21 @@ const App = () => {
             return;
         }
 
+        // Get the stored coordinates
         const data = docSnap.data();
         const leftX = data['upper-left']['x'];
         const leftY = data['upper-left']['y'];
         const rightX = data['bottom-right']['x'];
         const rightY = data['bottom-right']['y'];
 
+        // Get the user's click's coordinates
         const userX = e.clientX;
         const userY = e.clientY;
 
         console.log(leftX, leftY, rightX, rightY)
         console.log(userX, userY)
 
+        // Compare
         if (
             (leftX <= userX && userX <= rightX) &&
             (leftY <= userY && userY <= rightY)
