@@ -10,7 +10,6 @@ html {
     justify-content: flex-start;
     overflow: visible;
     min-height: 100%;
-    position: relative
 }
 
 #header {
@@ -36,13 +35,14 @@ html {
 
 /* This attempts to resize the background image to the size of its parent div */
 #game {
-    min-height: 849px;
+    max-width: 100%;
     top: 0;
     left: 0;
-    background: url(./background.jpg) no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+    display: block;
   }
+
+#game img {
+    width: 100%;
+
+}
 
